@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدارات المنطقية التركيبية — Combinational Logic Circuits | مراجعة الدارات المنطقية</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+:root{
+  --bg:#0D1117; --card:#161B22; --border:#2D3440;
+  --blue:#2563EB; --amber:#E8A000; --white:#E2E8F0; --muted:#8B96A5;
+  --green:#22c55e; --red:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{margin:0; padding:0}
+body{background:var(--bg); color:var(--white); font-family:'Tajawal','Segoe UI',sans-serif; line-height:1.9; padding-bottom:70px}
+.en, .mono{font-family:'JetBrains Mono',monospace; color:#93c5fd; direction:ltr}
+.top-header{position:sticky; top:0; z-index:100; background:linear-gradient(135deg,#12213f,#0D1117); border-bottom:1px solid var(--blue); padding:14px 16px 0; text-align:center}
+.top-header h1{color:var(--amber); margin:0 0 3px; font-size:1.05rem}
+.top-header p{color:var(--muted); margin:0 0 12px; font-size:.74rem}
+.tabs{display:flex; gap:6px; overflow-x:auto; padding:0 10px 10px; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:0 0 auto; background:var(--card); color:var(--muted); border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-family:'Tajawal'; font-size:.85rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:.2s}
+.tab-btn.active{background:var(--blue); color:#fff; border-color:var(--blue)}
+.content-wrap{padding:16px 14px 10px; max-width:600px; margin:0 auto}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+h2{color:var(--blue); font-size:1.06rem; border-right:4px solid var(--amber); padding-right:10px; margin-top:28px; margin-bottom:10px}
+h3{color:var(--amber); font-size:.97rem; margin-top:18px; margin-bottom:8px}
+.card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:14px}
+ul{margin:8px 0; padding-right:20px}
+li{margin-bottom:6px}
+.key{color:var(--amber); font-weight:700}
+.formula{background:#0A0E14; border:1px dashed var(--blue); border-radius:8px; padding:10px 14px; text-align:center; font-family:'JetBrains Mono',monospace; color:#93c5fd; margin:10px 0; font-size:.92rem; direction:ltr}
+table{width:100%; border-collapse:collapse; margin:10px 0; font-size:.85rem}
+th,td{border:1px solid var(--border); padding:7px 8px; text-align:center}
+th{background:#1c2532; color:var(--amber)}
+.note{background:#1c1508; border-right:4px solid var(--amber); border-radius:8px; padding:10px 14px; margin:12px 0; font-size:.87rem}
+.imp{background:#0e1c2b; border-right:4px solid var(--blue); border-radius:8px; padding:10px 14px; margin:12px 0; font-size:.87rem}
+.imp .step{direction:ltr; text-align:left; font-family:'JetBrains Mono',monospace; margin:3px 0; display:block}
+.compare-grid{display:flex; flex-direction:column; gap:10px}
+.compare-item{background:#0f1420; border-radius:10px; padding:10px 14px; border:1px solid var(--border)}
+.compare-item .title{color:var(--amber); font-weight:700; margin-bottom:4px}
+.section-hero{text-align:center; padding:16px 14px; border-radius:14px; background:linear-gradient(135deg,#12213f,#0D1117); border:1px solid var(--blue); margin-bottom:18px}
+.section-hero h2.hero-title{color:var(--amber); margin:0 0 4px; font-size:1.13rem; border:none; padding:0}
+.section-hero p{color:var(--muted); margin:0; font-size:.82rem}
+.badge{display:inline-block; background:var(--blue); color:#fff; padding:3px 12px; border-radius:20px; font-size:.75rem; margin-top:8px}
+.badge.amber{background:var(--amber); color:#000}
+.formula-box{background:#0A0E14; border:1px solid var(--blue); border-radius:8px; padding:10px 12px; margin:8px 0; font-family:'JetBrains Mono',monospace; color:#93c5fd; direction:ltr; text-align:center; font-size:.92rem}
+.formula-label{color:var(--amber); font-family:'Tajawal'; direction:rtl; font-size:.8rem; margin-bottom:4px; display:block}
+.q-card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:12px}
+.q-num{color:var(--amber); font-weight:700; margin-left:4px}
+.options{list-style:none; padding:0; margin:8px 0 0}
+.options li{padding:7px 10px; margin-bottom:6px; border-radius:8px; background:#0f1420; border:1px solid var(--border); font-size:.9rem}
+details{margin-top:6px}
+summary{cursor:pointer; color:var(--blue); font-size:.85rem; font-weight:700; padding:4px 0}
+.answer-box{margin-top:6px; background:#0a1f14; border-right:3px solid var(--green); padding:8px 10px; border-radius:6px; font-size:.87rem}
+.answer-box .step{direction:ltr; text-align:left; font-family:'JetBrains Mono',monospace; margin:3px 0; display:block}
+.correct{color:var(--green); font-weight:700}
+.open-q{font-size:.95rem; margin-bottom:4px}
+.exam-badge{display:inline-block; background:var(--amber); color:#000; font-size:.7rem; padding:2px 10px; border-radius:10px; font-weight:700; margin-bottom:8px}
+.section-title{background:var(--blue); color:#fff; padding:8px 14px; border-radius:10px; font-size:.98rem; margin-top:26px; margin-bottom:12px; text-align:center}
+.mini-toc{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 16px; margin-bottom:18px}
+.mini-toc a{color:var(--blue); display:block; padding:4px 0; text-decoration:none; font-size:.9rem}
+.progress{width:100%; background:var(--card); border-radius:20px; height:8px; margin-bottom:16px; overflow:hidden; border:1px solid var(--border)}
+.progress-fill{height:100%; background:var(--blue); width:0%; transition:width .3s}
+.counter{color:var(--muted); font-size:.85rem; margin-bottom:10px; text-align:center}
+.flashcard-wrap{width:100%; perspective:1200px; margin-bottom:16px}
+.flashcard{position:relative; width:100%; min-height:230px; transform-style:preserve-3d; transition:transform .5s; cursor:pointer}
+.flashcard.flipped{transform:rotateY(180deg)}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; padding:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:1px solid var(--border)}
+.front{background:linear-gradient(135deg,#161B22,#0D1117); border-color:var(--blue)}
+.back{background:linear-gradient(135deg,#1c1508,#161B22); border-color:var(--amber); transform:rotateY(180deg); font-size:.94rem; line-height:1.7}
+.q-label, .a-label{font-size:.7rem; color:var(--muted); text-transform:uppercase; margin-bottom:10px; letter-spacing:1px}
+.q-text{font-size:1rem; font-weight:700; color:var(--white)}
+.a-text{color:var(--white)}
+.tap-hint{position:absolute; bottom:10px; font-size:.7rem; color:var(--muted)}
+.fc-controls{display:flex; gap:10px; width:100%}
+.btn{flex:1; padding:12px; border-radius:10px; border:none; font-size:.95rem; font-family:'Tajawal'; font-weight:700; cursor:pointer}
+.btn-prev{background:var(--card); color:var(--white); border:1px solid var(--border)}
+.btn-next{background:var(--blue); color:#fff}
+.btn-shuffle{background:var(--amber); color:#000; flex:0 0 auto; padding:12px 16px}
+.footer{text-align:center; color:var(--muted); font-size:.8rem; margin-top:40px}
+</style>
+
+<style>
+/* ===== Floating Subject Navigator (injected) ===== */
+.lecnav-fab{
+  position:fixed; bottom:18px; left:18px; z-index:999;
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg,#2563EB,#1d4ed8);
+  color:#fff; border:none; box-shadow:0 4px 14px rgba(37,99,235,.5);
+  font-size:1.4rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform .2s;
+}
+.lecnav-fab:active{transform:scale(.92)}
+.lecnav-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:1000;
+  display:none; align-items:flex-end; justify-content:center;
+  backdrop-filter:blur(2px);
+}
+.lecnav-overlay.open{display:flex}
+.lecnav-sheet{
+  width:100%; max-width:600px; background:#161B22; border:1px solid #2D3440;
+  border-bottom:none; border-radius:20px 20px 0 0; padding:16px 14px 26px;
+  max-height:80vh; overflow-y:auto; animation:lecnavUp .25s ease;
+  font-family:'Tajawal','Segoe UI',sans-serif;
+}
+@keyframes lecnavUp{from{transform:translateY(30px); opacity:0} to{transform:translateY(0); opacity:1}}
+.lecnav-sheet h3{
+  color:#E8A000; margin:0 0 12px; font-size:1.05rem; text-align:center;
+  border:none; padding:0;
+}
+.lecnav-home{
+  display:block; text-align:center; color:#93c5fd; text-decoration:none;
+  font-size:.85rem; margin-bottom:14px; padding:8px; border:1px dashed #2D3440;
+  border-radius:10px;
+}
+.lecnav-list{display:flex; flex-direction:column; gap:8px}
+.lecnav-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  border-radius:12px; background:#0f1420; border:1px solid #2D3440;
+  color:#E2E8F0; text-decoration:none; font-size:.9rem; transition:.15s;
+}
+.lecnav-item:active{background:#1c2532}
+.lecnav-item.current{border-color:#2563EB; background:#0e1c2b}
+.lecnav-item .lecnav-num{
+  flex:0 0 auto; width:30px; height:30px; border-radius:50%;
+  background:#2563EB; color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.85rem; font-family:'JetBrains Mono',monospace;
+}
+.lecnav-item.current .lecnav-num{background:#E8A000; color:#000}
+.lecnav-item .lecnav-title{flex:1}
+.lecnav-close{
+  position:absolute; top:10px; left:14px; background:none; border:none;
+  color:#8B96A5; font-size:1.3rem; cursor:pointer; padding:4px 8px;
+}
+.lecnav-sheet{position:relative}
+</style>
+
+</head>
+<body>
+
+<!-- ===== Floating Subject Navigator (injected) ===== -->
+<button class="lecnav-fab" id="lecnavFab" onclick="document.getElementById('lecnavOverlay').classList.add('open')" aria-label="التنقل بين الفصول">☰</button>
+<div class="lecnav-overlay" id="lecnavOverlay" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="lecnav-sheet">
+    <button class="lecnav-close" onclick="document.getElementById('lecnavOverlay').classList.remove('open')">✕</button>
+    <h3>📚 التنقل بين الفصول</h3>
+    <a class="lecnav-home" href="index.html">⌂ العودة للفهرس الرئيسي</a>
+    <div class="lecnav-list">
+  <a class="lecnav-item" href="numbering-system.html"><span class="lecnav-num">🔢</span><span class="lecnav-title">نظام العد</span></a>
+  <a class="lecnav-item" href="logic-gates.html"><span class="lecnav-num">🚪</span><span class="lecnav-title">البوابات المنطقية</span></a>
+  <a class="lecnav-item" href="boolean-algebra.html"><span class="lecnav-num">Σ</span><span class="lecnav-title">الجبر البولياني</span></a>
+  <a class="lecnav-item current" href="combinational-circuits.html"><span class="lecnav-num">🧩</span><span class="lecnav-title">الدارات التركيبية</span></a>
+    </div>
+  </div>
+</div>
+
+
+<div class="top-header">
+  <h1>🧩 الدارات المنطقية التركيبية — Combinational Logic</h1>
+  <p>الدارات والنظم المنطقية | الفصل الخامس — سلسلة مراجعة موحدة</p>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="summary">📘 الملخص</button>
+    <button class="tab-btn" data-tab="cheat">🧾 ورقة غش</button>
+    <button class="tab-btn" data-tab="bank">❓ بنك أسئلة</button>
+    <button class="tab-btn" data-tab="flash">⚡ فلاش كاردز</button>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+<!-- ================= TAB 1: SUMMARY ================= -->
+<div class="tab-panel active" id="tab-summary">
+
+<div class="section-hero">
+  <h2 class="hero-title">📘 الملخص المكثف</h2>
+  <p>الجامعات، الطارحات، المقارنات، فاكات الترميز، المشفرات، والمالتيبلكسر</p>
+</div>
+
+<div class="mini-toc">
+  <a href="#s1">① أنواع الدارات المنطقية</a>
+  <a href="#s2">② مراحل تصميم دارة تركيبية</a>
+  <a href="#s3">③ دارات الجمع (Adders)</a>
+  <a href="#s4">④ الطارح والجامع/الطارح</a>
+  <a href="#s5">⑤ المقارنات (Comparators)</a>
+  <a href="#s6">⑥ فاك الترميز (Decoder)</a>
+  <a href="#s7">⑦ المرمز (Encoder)</a>
+  <a href="#s8">⑧ المرمز ذو الأولوية</a>
+  <a href="#s9">⑨ مبادل البيانات (Multiplexer)</a>
+</div>
+
+<h2 id="s1">① أنواع الدارات المنطقية</h2>
+<div class="card">
+  <div class="compare-grid">
+    <div class="compare-item">
+      <div class="title">الدارات التركيبية Combinational Circuit</div>
+      تتحدد قيم مخارجها تبعاً لقيم مداخلها فقط (باللحظة الحالية). لا تحتوي عنصر ذاكرة. لا يوجد فيها تغذية عكسية (Feedback).
+    </div>
+    <div class="compare-item">
+      <div class="title">الدارات التتابعية Sequential Circuit</div>
+      تتحدد قيم مخارجها تبعاً لقيم مداخلها الحالية وتبعاً لقيم مخارجها السابقة (الحالة السابقة). تحتاج إلى عنصر ذاكرة. يوجد فيها تغذية عكسية.
+    </div>
+  </div>
+</div>
+
+<h2 id="s2">② مراحل تصميم دارة تركيبية</h2>
+<div class="card">
+  <ul>
+    <li>تحديد مداخل الدارة ومخارجها وإسناد رموز لهذه المتغيرات.</li>
+    <li>وضع جدول الحقيقة وذلك حسب معطيات المسألة.</li>
+    <li>إيجاد توابع الخرج المختصرة (بالتبسيط الجبري أو K-Map).</li>
+    <li>رسم المخطط المنطقي للدارة المطلوبة.</li>
+  </ul>
+  <div class="imp">مثال تطبيقي: منشأة صناعية تستخدم ثلاث خزانات مواد أولية سائلة، كل خزان مزود بحساس مستوى يعطي على خرجه القيمة المنطقية High عند انخفاض مستوى السائل دون مستوى محدد. المطلوب تصميم دارة منطقية تعطي على خرجها إنذار انخفاض مستوى إذا انخفض مستوى السائل عن الحد الأدنى في خزانين معاً على الأقل.<br>
+  <span class="step">الحل: X = a.b + b.c + a.c</span></div>
+</div>
+
+<h2 id="s3">③ دارات الجمع — Adders</h2>
+<div class="card">
+  <h3>الجامع نصف الجامع Half Adder</h3>
+  <p>دارة منطقية تركيبية مهمتها تنفيذ عملية الجمع الحاسوبي لرقمين ثنائيين a,b، كل منهما بطول بت واحد فقط.</p>
+  <table><tr><th>a</th><th>b</th><th>Sum</th><th>Carry</th></tr>
+  <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+  <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+  <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr></table>
+  <div class="formula">Sum = a⊕b &nbsp;&nbsp; Carry = a·b</div>
+  <div class="note">📌 قصوره: لا يأخذ بعين الاعتبار أي Carry داخل (وارد) من مرحلة سابقة — لذلك لا يصلح للجمع متعدد البتات وحده.</div>
+
+  <h3>الجامع الكامل Full Adder</h3>
+  <p>دارة منطقية تركيبية مهمتها تنفيذ عملية الجمع الحاسوبي لرقمين ثنائيين a,b بطول بت واحد لكل منهما، مع مراعاة Carry واحد قادم من مرحلة سابقة.</p>
+  <div class="formula">Sum = (A⊕B) ⊕ C &nbsp;&nbsp; Carry = A.B + C.(A⊕B)</div>
+  <div class="note">📌 يُبنى الجامع الكامل عملياً من نصفي جامع (Half Adder) متصلين + بوابة OR على خرجي الـCarry.</div>
+
+  <h3>الجامع الإثناني المتفرع (متتالي) — Ripple Carry Adder</h3>
+  <p>لجمع عددين ثنائيين كل منهما بطول أكثر من بت واحد، نستخدم عدة دارات Full Adder متتالية، بحيث ينتقل Carry الخرج من كل مرحلة كـCarry دخل للمرحلة التالية.</p>
+  <div class="imp">مثال 4-bit: لجمع رقمين ثنائيين طول كل منهما 4 بت، نستخدم 4 دارات Full Adder متتالية موصولة عبر إشارات الـCarry.</div>
+</div>
+
+<h2 id="s4">④ الجامع/الطارح المشترك</h2>
+<div class="card">
+  <p>يمكن تصميم دارة واحدة تقوم بوظيفتي الجمع والطرح معاً، بالتحكم بإشارة تتحكم بعكس أحد المدخلين (عبر بوابة XOR) قبل دخوله إلى دارة الجمع، ما يحوّل عملية الجمع إلى طرح (باستخدام مبدأ المتمم إلى اثنين).</p>
+</div>
+
+<h2 id="s5">⑤ المقارنات — Comparators</h2>
+<div class="card">
+  <h3>مقارن بت واحد (باستخدام XNOR)</h3>
+  <ul>
+    <li>دارة المقارن تختبر فيما إذا كانت القيمتان الرقميتان متساويتين.</li>
+    <li>لمقارنة رقمين ثنائيين طول كل منهما بت واحد، يمكن استخدام بوابة XNOR وحدها.</li>
+    <li>لمقارنة رقمين ثنائيين طول كل منهما 4-bit، نستخدم أربع بوابات XNOR، ونجمّع خرجها عبر بوابة AND.</li>
+  </ul>
+
+  <h3>مقارن خانتين (بمخارج ثلاثة: A=B، A&gt;B، A&lt;B)</h3>
+  <p>دارة مقارن مصممة لمقارنة عددين ثنائيين طول كل منهما بت واحد بحيث يكون للدارة ثلاثة مخارج:</p>
+  <div class="formula-box"><span class="formula-label">مخرج التساوي</span>X = A̅.B̅ + A.B</div>
+  <div class="formula-box"><span class="formula-label">مخرج A أصغر من B</span>Y = A̅.B</div>
+  <div class="formula-box"><span class="formula-label">مخرج A أكبر من B</span>Z = A.B̅</div>
+</div>
+
+<h2 id="s6">⑥ فاك الترميز (فك التشفير) — Decoder</h2>
+<div class="card">
+  <h3>فاك الترميز البسيط (فك الرمز)</h3>
+  <p>ارسم الدارة المنطقية التي تعطي على خرجها المستوى المنطقي «1» عندما يصل الرمز إلى مداخلها 1001 (تحديداً).</p>
+
+  <h3>مسألة تطبيقية: فاك ترميز BCD</h3>
+  <p>صمم الدارة المنطقية بأربعة مداخل للكشف عن الرماز التي تنتمي إلى رماز BCD.</p>
+  <div class="formula">N = a,b,c,d = Σm(10,11,12,13,14,15)</div>
+  <div class="formula">N = a.b + a.c</div>
+
+  <h3>فاك ترميز 2 to 4 Decoder</h3>
+  <p>دارة رقمية عن n مدخل و2ⁿ مخرج. عند تفعيل رمز دخل محدد، يكون واحداً فقط من المخارج نشطاً وبقية المخارج غير نشطة.</p>
+  <div class="formula-box"><span class="formula-label">لفاك ترميز 2 to 4</span>D0=A̅.B̅ &nbsp; D1=A̅.B &nbsp; D2=A.B̅ &nbsp; D3=A.B</div>
+
+  <h3>فاك ترميز 3 to 8 Decoder</h3>
+  <div class="formula-box"><span class="formula-label">أمثلة على مخارج فاك ترميز 3 to 8</span>D0=A2.A1.A0 &nbsp; D1=A2.A1.A0̅ &nbsp; ... حتى D7</div>
+  <div class="note">📌 يمكن بناء فاك ترميز أكبر (3 to 8) من دمج فاكي ترميز أصغر (2 to 4) مع بوابات تحكم إضافية.</div>
+
+  <h3>محلل الشفرة العشرية المرمزة ثنائياً — BCD-to-7-Segment Decoder</h3>
+  <p>دارة تركيبية تستقبل على دخلها رمز BCD وتستخدم مخارجها لقيادة وحدة الإظهار (7-Segment Display).</p>
+  <div class="note">📌 لكل قطعة (Segment) من السبع قطع (a حتى g) معادلة بوليانية خاصة بها مبنية على مداخل BCD الأربعة (A,B,C,D)، وتُشتق بواسطة K-Map أو التبسيط الجبري لكل قطعة على حدة.</div>
+</div>
+
+<h2 id="s7">⑦ المرمز أو المشفر — Encoder</h2>
+<div class="card">
+  <p>دارة رقمية عن 2ⁿ مدخل وn مخرج، تقوم بتوليد شفرة ثنائية معينة على أطراف الخرج، وذلك عند تنشيط طرف واحد فقط من أطراف الدخل، أما بقية أطراف الدخل تكون غير نشطة.</p>
+  <h3>مثال: مرمز 8 to 3</h3>
+  <table style="font-size:.78rem">
+    <tr><th>Input</th><th>A2</th><th>A1</th><th>A0</th></tr>
+    <tr><td>D0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>D1</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><td>D2</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>D3</td><td>0</td><td>1</td><td>1</td></tr>
+    <tr><td>D4</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><td>D5</td><td>1</td><td>0</td><td>1</td></tr>
+    <tr><td>D6</td><td>1</td><td>1</td><td>0</td></tr>
+    <tr><td>D7</td><td>1</td><td>1</td><td>1</td></tr>
+  </table>
+  <div class="formula-box"><span class="formula-label">معادلات مرمز 8 to 3</span>A2=D4+D5+D6+D7 &nbsp; A1=D2+D3+D6+D7 &nbsp; A0=D1+D3+D5+D7</div>
+</div>
+
+<h2 id="s8">⑧ المرمز ذو الأولوية — Priority Encoder</h2>
+<div class="card">
+  <p>مشكلة المرمز العادي: إذا نُشّط أكثر من مدخل بنفس اللحظة، يصبح الخرج غير محدد أو خاطئ. المرمز ذو الأولوية يحل هذه المشكلة بإعطاء أولوية لأعلى رقم دخل مفعّل.</p>
+  <h3>مثال: مرمز ذو أولوية 4 to 2</h3>
+  <table style="font-size:.78rem">
+    <tr><th>D3</th><th>D2</th><th>D1</th><th>D0</th><th>A1</th><th>A0</th><th>V</th></tr>
+    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>x</td><td>x</td><td>0</td></tr>
+    <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><td>0</td><td>0</td><td>1</td><td>x</td><td>0</td><td>1</td><td>1</td></tr>
+    <tr><td>0</td><td>1</td><td>x</td><td>x</td><td>1</td><td>0</td><td>1</td></tr>
+    <tr><td>1</td><td>x</td><td>x</td><td>x</td><td>1</td><td>1</td><td>1</td></tr>
+  </table>
+  <p><span class="key">V</span> = بت الصلاحية (Valid) — يشير إلى وجود دخل نشط واحد على الأقل.</p>
+  <div class="formula-box"><span class="formula-label">معادلات مرمز الأولوية</span>A1=D2+D3 &nbsp; A0=D3+D1.D2̅ &nbsp; V=D0+D1+D2+D3</div>
+</div>
+
+<h2 id="s9">⑨ مبادل البيانات — Multiplexer & Demultiplexer</h2>
+<div class="card">
+  <h3>المالتيبلكسر Multiplexer (مبادل/مُنتقي البيانات)</h3>
+  <p>دارة رقمية عن 2ⁿ مدخل ومخرج وحيد. تحتاج إلى n مدخل تحكم (Select Lines) لاختيار أي من مداخل البيانات يُمرَّر إلى الخرج.</p>
+  <h3>مثال: مبادل بيانات 4 to 1</h3>
+  <table><tr><th>S1</th><th>S0</th><th>Output Y</th></tr>
+  <tr><td>0</td><td>0</td><td>D0</td></tr>
+  <tr><td>0</td><td>1</td><td>D1</td></tr>
+  <tr><td>1</td><td>0</td><td>D2</td></tr>
+  <tr><td>1</td><td>1</td><td>D3</td></tr></table>
+  <div class="formula">Y = S1̅.S0̅.D0 + S1̅.S0.D1 + S1.S0̅.D2 + S1.S0.D3</div>
+  <div class="note">📌 المالتيبلكسر يعمل كمفتاح إلكتروني رقمي متعدد الاتجاهات (يختار مصدر بيانات من عدة مصادر بناءً على إشارات التحكم).</div>
+  <h3>الديمالتيبلكسر Demultiplexer</h3>
+  <p>عملية عكسية للمالتيبلكسر: دخل واحد وn مدخل تحكم، تُوجَّه البيانات من الدخل الوحيد إلى واحد من 2ⁿ مخرج حسب قيمة إشارات التحكم.</p>
+</div>
+
+<div class="footer">سلسلة مراجعة موحدة — ملخص الدارات المنطقية التركيبية</div>
+</div>
+
+<!-- ================= TAB 2: CHEAT SHEET ================= -->
+<div class="tab-panel" id="tab-cheat">
+<div class="section-hero"><h2 class="hero-title">🧾 ورقة الغش</h2><p>المعادلات والقواعد فقط — بدون شرح</p></div>
+
+<h3>الجامعات</h3>
+<div class="formula-box"><span class="formula-label">Half Adder</span>Sum=a⊕b &nbsp; Carry=a·b</div>
+<div class="formula-box"><span class="formula-label">Full Adder</span>Sum=(A⊕B)⊕C &nbsp; Carry=A.B+C.(A⊕B)</div>
+
+<h3>المقارنات</h3>
+<div class="formula-box"><span class="formula-label">مقارن بت واحد</span>XNOR وحدها (أو 4×XNOR + AND لـ4-bit)</div>
+<div class="formula-box"><span class="formula-label">A=B</span>A̅.B̅ + A.B</div>
+<div class="formula-box"><span class="formula-label">A&lt;B</span>A̅.B</div>
+<div class="formula-box"><span class="formula-label">A&gt;B</span>A.B̅</div>
+
+<h3>فاك ترميز 2 to 4</h3>
+<div class="formula-box">D0=A̅.B̅ &nbsp; D1=A̅.B &nbsp; D2=A.B̅ &nbsp; D3=A.B</div>
+
+<h3>مرمز 8 to 3</h3>
+<div class="formula-box">A2=D4+D5+D6+D7<br>A1=D2+D3+D6+D7<br>A0=D1+D3+D5+D7</div>
+
+<h3>مرمز الأولوية 4 to 2</h3>
+<div class="formula-box">A1=D2+D3 &nbsp; A0=D3+D1.D2̅ &nbsp; V=D0+D1+D2+D3</div>
+
+<h3>مبادل بيانات 4 to 1</h3>
+<div class="formula-box">Y=S1̅.S0̅.D0+S1̅.S0.D1+S1.S0̅.D2+S1.S0.D3</div>
+
+<h3>مراحل تصميم أي دارة تركيبية</h3>
+<div class="formula-box">1) حدد المداخل/المخارج → 2) جدول الحقيقة → 3) توابع الخرج المختصرة → 4) المخطط المنطقي</div>
+
+<h3>الفرق: تركيبية vs تتابعية</h3>
+<div class="formula-box"><span class="formula-label">تركيبية</span>لا ذاكرة، لا تغذية عكسية، الخرج=دالة الدخل الحالي فقط</div>
+<div class="formula-box"><span class="formula-label">تتابعية</span>تحتاج ذاكرة، فيها تغذية عكسية، الخرج=دالة(الدخل الحالي + الحالة السابقة)</div>
+
+<div class="footer">سلسلة مراجعة موحدة — ورقة غش الدارات التركيبية</div>
+</div>
+
+<!-- ================= TAB 3: QUESTION BANK ================= -->
+<div class="tab-panel" id="tab-bank">
+<div class="section-hero"><h2 class="hero-title">❓ بنك الأسئلة</h2><p>اختيار من متعدد، أسئلة مفتوحة، ومحاكاة امتحان</p></div>
+
+<div class="section-title">① اختيار من متعدد</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">1.</span> ما الفرق الجوهري بين الدارة التركيبية والدارة التتابعية؟</p>
+  <ul class="options"><li>A) التركيبية أسرع دائماً</li><li>B) التتابعية تحتاج عنصر ذاكرة والتركيبية لا</li><li>C) لا فرق بينهما</li><li>D) التركيبية تحتاج تغذية عكسية</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B</span> — التتابعية تحتاج ذاكرة وفيها تغذية عكسية، بعكس التركيبية</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">2.</span> ما القصور الأساسي في نصف الجامع (Half Adder)؟</p>
+  <ul class="options"><li>A) لا يحسب Sum</li><li>B) لا يحسب Carry</li><li>C) لا يأخذ Carry وارد من مرحلة سابقة</li><li>D) يعمل فقط بأرقام سالبة</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: C</span></div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">3.</span> لجمع عددين ثنائيين طول كل منهما 4 بت، كم دارة Full Adder نحتاج؟</p>
+  <ul class="options"><li>A) 1</li><li>B) 2</li><li>C) 4</li><li>D) 8</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: C) 4</span> — دارة Full Adder واحدة لكل بت، متتالية عبر الـCarry</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">4.</span> لمقارنة رقمين ثنائيين بطول بت واحد لكل منهما، أي بوابة تكفي وحدها؟</p>
+  <ul class="options"><li>A) AND</li><li>B) OR</li><li>C) XNOR</li><li>D) NAND</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: C) XNOR</span></div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">5.</span> دارة فاك ترميز (Decoder) بـn مدخل، كم مخرج تملك؟</p>
+  <ul class="options"><li>A) n</li><li>B) 2n</li><li>C) 2ⁿ</li><li>D) n²</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: C) 2ⁿ</span></div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">6.</span> دارة المرمز (Encoder) عن 2ⁿ مدخل، كم مخرج تملك؟</p>
+  <ul class="options"><li>A) 2ⁿ</li><li>B) n</li><li>C) n²</li><li>D) 2n</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) n</span> — عكس الـDecoder تماماً</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">7.</span> المشكلة التي يحلّها المرمز ذو الأولوية (Priority Encoder) مقارنة بالمرمز العادي:</p>
+  <ul class="options"><li>A) بطء الاستجابة</li><li>B) تفعيل أكثر من مدخل بنفس اللحظة يعطي خرج غير محدد</li><li>C) استهلاك طاقة عالٍ</li><li>D) عدد مخارج قليل</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B</span></div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">8.</span> مبادل البيانات (Multiplexer) عن 2ⁿ مدخل بيانات يحتاج كم مدخل تحكم (Select)؟</p>
+  <ul class="options"><li>A) 2ⁿ</li><li>B) n</li><li>C) n²</li><li>D) 1 دائماً</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) n</span></div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">9.</span> دارة الـBCD-to-7-Segment Decoder تُستخدم من أجل:</p>
+  <ul class="options"><li>A) جمع رقمين ثنائيين</li><li>B) قيادة وحدة عرض رقمي (Display)</li><li>C) مقارنة رقمين</li><li>D) تخزين البيانات</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B</span></div></details>
+</div>
+
+<div class="section-title">② أسئلة مفتوحة</div>
+
+<div class="q-card">
+  <p class="open-q"><b>1.</b> اشرح كيف يمكن بناء دارة Full Adder من دارتي Half Adder.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">
+  نمرر A وB إلى Half Adder أول فنحصل على (A⊕B) وCarry1=A.B. ثم نمرر ناتج (A⊕B) مع Carry الوارد C إلى Half Adder ثاني فنحصل على Sum النهائي=(A⊕B)⊕C وCarry2=C.(A⊕B). أخيراً Carry الكلي = Carry1 OR Carry2 = A.B + C.(A⊕B).
+  </div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>2.</b> صمم دارة منطقية تعطي إنذاراً (خرج=1) إذا انخفض مستوى السائل عن الحد الأدنى في خزانين معاً على الأقل من أصل 3 خزانات (a,b,c).</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">
+  X = a.b + b.c + a.c — كل حد يمثل تفعّل خزانين معاً (بغض النظر عن حالة الخزان الثالث)
+  </div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>3.</b> ما الفرق الوظيفي بين المالتيبلكسر (Multiplexer) والديمالتيبلكسر (Demultiplexer)؟</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">
+  المالتيبلكسر: عدة مداخل بيانات (2ⁿ) ومخرج واحد، يختار أحد المداخل ليمرره للخرج حسب إشارات التحكم. الديمالتيبلكسر: عكسه تماماً — مدخل بيانات واحد وعدة مخارج (2ⁿ)، يوجّه الدخل الوحيد لأحد المخارج حسب إشارات التحكم.
+  </div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>4.</b> لماذا لا تصلح دارة Half Adder وحدها لجمع أعداد متعددة البتات (مثل 4-bit)؟</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">
+  لأن Half Adder لا تملك مدخلاً لاستقبال Carry وارد من مرحلة الجمع السابقة (الخانة الأقل وزناً). عند جمع أعداد متعددة البتات، كل خانة (باستثناء الأولى) قد تحتاج لإضافة Carry من الخانة السابقة، وهذا ما توفره فقط دارة Full Adder.
+  </div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>5.</b> صمم دارة فاك ترميز (Decoder) تكشف عن الرموز المنتمية لترميز BCD من بين مدخلات 4-bit (a,b,c,d). اكتب التابع المختصر.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">
+  رموز BCD تشمل 0000 حتى 1001 فقط، والرموز غير المنتمية هي 1010 حتى 1111 أي Σm(10,11,12,13,14,15). بتبسيط هذه الحدود بـK-Map: N = a.b + a.c (حيث N=1 يعني الرمز خارج نطاق BCD)
+  </div></details>
+</div>
+
+<div class="section-title">③ محاكاة امتحان</div>
+<div class="q-card">
+  <span class="exam-badge">⏱ محاكاة — 20 دقيقة</span>
+  <p style="font-size:.9rem; color:var(--muted)">أجب بدون فتح الملخص. راجع الحل بالنهاية فقط.</p>
+  <p class="open-q"><b>س1 (8 علامات):</b> اكتب جدول الحقيقة والتعبير المنطقي لكل من Sum وCarry في دارة Full Adder.</p>
+  <p class="open-q"><b>س2 (6 علامات):</b> صمم دارة مقارن بمخرجين A=B وA≠B لرقمين ثنائيين بطول بت واحد لكل منهما، مستخدماً بوابة واحدة فقط لكل مخرج.</p>
+  <p class="open-q"><b>س3 (6 علامات):</b> ما عدد مداخل التحكم (Select Lines) المطلوبة لمبادل بيانات (Multiplexer) يملك 8 مداخل بيانات؟ اشرح السبب.</p>
+
+  <details><summary>📖 عرض نموذج الحل الكامل</summary>
+  <div class="answer-box">
+  <b>س1:</b> جدول الحقيقة (A,B,C_in → Sum,Carry): (0,0,0)→(0,0)، (0,0,1)→(1,0)، (0,1,0)→(1,0)، (0,1,1)→(0,1)، (1,0,0)→(1,0)، (1,0,1)→(0,1)، (1,1,0)→(0,1)، (1,1,1)→(1,1).<br>
+  Sum=(A⊕B)⊕C، Carry=A.B+C.(A⊕B)<br><br>
+  <b>س2:</b> A=B: بوابة XNOR واحدة (X=A⊙B). A≠B: بوابة XOR واحدة (X=A⊕B)<br><br>
+  <b>س3:</b> يحتاج 3 مداخل تحكم، لأن عدد مداخل البيانات=2ⁿ=8 → n=3 (log₂8=3)
+  </div></details>
+</div>
+
+<div class="footer">سلسلة مراجعة موحدة — بنك أسئلة الدارات التركيبية</div>
+</div>
+
+<!-- ================= TAB 4: FLASHCARDS ================= -->
+<div class="tab-panel" id="tab-flash">
+<div class="section-hero"><h2 class="hero-title">⚡ بطاقات المراجعة</h2><p>اضغط البطاقة لقلبها وعرض الجواب</p></div>
+
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+<div class="counter" id="counter">1 / 16</div>
+
+<div class="flashcard-wrap">
+  <div class="flashcard" id="flashcard" onclick="flipCard()">
+    <div class="face front">
+      <div class="q-label">سؤال</div>
+      <div class="q-text" id="qText"></div>
+      <div class="tap-hint">👆 اضغط لعرض الجواب</div>
+    </div>
+    <div class="face back">
+      <div class="a-label">جواب</div>
+      <div class="a-text" id="aText"></div>
+    </div>
+  </div>
+</div>
+
+<div class="fc-controls">
+  <button class="btn btn-prev" onclick="prevCard()">◀ السابق</button>
+  <button class="btn btn-shuffle" onclick="shuffleCards()">🔀</button>
+  <button class="btn btn-next" onclick="nextCard()">التالي ▶</button>
+</div>
+</div>
+
+<div class="footer">سلسلة مراجعة موحدة — فلاش كاردز الدارات التركيبية</div>
+
+</div>
+
+<script>
+const cards = [
+  {q:"ما الفرق بين الدارة التركيبية والتتابعية؟", a:"التركيبية: لا ذاكرة ولا تغذية عكسية، الخرج=دالة الدخل الحالي فقط. التتابعية: تحتاج ذاكرة وفيها تغذية عكسية"},
+  {q:"ما معادلة Sum في نصف الجامع (Half Adder)؟", a:"Sum = a⊕b"},
+  {q:"ما معادلة Carry في نصف الجامع؟", a:"Carry = a·b"},
+  {q:"ما قصور نصف الجامع (Half Adder)؟", a:"لا يأخذ بعين الاعتبار Carry وارد من مرحلة سابقة"},
+  {q:"ما معادلة Sum في الجامع الكامل (Full Adder)؟", a:"Sum = (A⊕B) ⊕ C"},
+  {q:"ما معادلة Carry في الجامع الكامل؟", a:"Carry = A.B + C.(A⊕B)"},
+  {q:"كم دارة Full Adder نحتاج لجمع رقمين 4-bit؟", a:"4 دارات متتالية (Ripple Carry Adder)"},
+  {q:"أي بوابة تكفي لمقارنة رقمين بطول بت واحد؟", a:"XNOR وحدها"},
+  {q:"دارة Decoder بـn مدخل، كم مخرج تملك؟", a:"2ⁿ مخرج"},
+  {q:"دارة Encoder عن 2ⁿ مدخل، كم مخرج تملك؟", a:"n مخرج (عكس الـDecoder)"},
+  {q:"ما المشكلة التي يحلها Priority Encoder؟", a:"تفعيل أكثر من مدخل بنفس اللحظة بالمرمز العادي يعطي خرج غير محدد"},
+  {q:"مبادل بيانات (Multiplexer) بـ8 مداخل بيانات، كم مدخل تحكم يحتاج؟", a:"3 مداخل تحكم (2³=8)"},
+  {q:"ما وظيفة BCD-to-7-Segment Decoder؟", a:"استقبال رمز BCD وقيادة وحدة عرض رقمي (7-Segment Display)"},
+  {q:"ما الفرق بين Multiplexer وDemultiplexer؟", a:"Multiplexer: عدة مداخل ومخرج واحد. Demultiplexer: مدخل واحد وعدة مخارج"},
+  {q:"معادلات فاك ترميز 2 to 4 (D0 حتى D3)؟", a:"D0=A̅.B̅, D1=A̅.B, D2=A.B̅, D3=A.B"},
+  {q:"ما هي الخطوة الأولى بتصميم أي دارة تركيبية؟", a:"تحديد مداخل الدارة ومخارجها وإسناد رموز للمتغيرات"}
+];
+
+let currentIndex = 0;
+let isFlipped = false;
+
+function renderCard(){
+  document.getElementById('qText').textContent = cards[currentIndex].q;
+  document.getElementById('aText').textContent = cards[currentIndex].a;
+  document.getElementById('counter').textContent = (currentIndex+1) + ' / ' + cards.length;
+  document.getElementById('progressFill').style.width = ((currentIndex+1)/cards.length*100) + '%';
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+  isFlipped = false;
+}
+function flipCard(){
+  isFlipped = !isFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+}
+function nextCard(){ currentIndex = (currentIndex + 1) % cards.length; renderCard(); }
+function prevCard(){ currentIndex = (currentIndex - 1 + cards.length) % cards.length; renderCard(); }
+function shuffleCards(){
+  for(let i = cards.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  currentIndex = 0;
+  renderCard();
+}
+renderCard();
+</script>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+</script>
+
+</body>
+</html>
