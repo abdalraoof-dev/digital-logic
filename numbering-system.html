@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام العد — Numbering System | مراجعة الدارات المنطقية</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+:root{
+  --bg:#0D1117; --card:#161B22; --border:#2D3440;
+  --blue:#2563EB; --amber:#E8A000; --white:#E2E8F0; --muted:#8B96A5;
+  --green:#22c55e; --red:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{margin:0; padding:0}
+body{background:var(--bg); color:var(--white); font-family:'Tajawal','Segoe UI',sans-serif; line-height:1.9; padding-bottom:70px}
+.en, .mono{font-family:'JetBrains Mono',monospace; color:#93c5fd; direction:ltr}
+.top-header{position:sticky; top:0; z-index:100; background:linear-gradient(135deg,#12213f,#0D1117); border-bottom:1px solid var(--blue); padding:14px 16px 0; text-align:center}
+.top-header h1{color:var(--amber); margin:0 0 3px; font-size:1.05rem}
+.top-header p{color:var(--muted); margin:0 0 12px; font-size:.74rem}
+.tabs{display:flex; gap:6px; overflow-x:auto; padding:0 10px 10px; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:0 0 auto; background:var(--card); color:var(--muted); border:1px solid var(--border); border-radius:20px; padding:8px 16px; font-family:'Tajawal'; font-size:.85rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:.2s}
+.tab-btn.active{background:var(--blue); color:#fff; border-color:var(--blue)}
+.content-wrap{padding:16px 14px 10px; max-width:600px; margin:0 auto}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+h2{color:var(--blue); font-size:1.06rem; border-right:4px solid var(--amber); padding-right:10px; margin-top:28px; margin-bottom:10px}
+h3{color:var(--amber); font-size:.97rem; margin-top:18px; margin-bottom:8px}
+.card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:14px}
+ul{margin:8px 0; padding-right:20px}
+li{margin-bottom:6px}
+.key{color:var(--amber); font-weight:700}
+.formula{background:#0A0E14; border:1px dashed var(--blue); border-radius:8px; padding:10px 14px; text-align:center; font-family:'JetBrains Mono',monospace; color:#93c5fd; margin:10px 0; font-size:.92rem; direction:ltr}
+table{width:100%; border-collapse:collapse; margin:10px 0; font-size:.85rem}
+th,td{border:1px solid var(--border); padding:7px 8px; text-align:center}
+th{background:#1c2532; color:var(--amber)}
+.note{background:#1c1508; border-right:4px solid var(--amber); border-radius:8px; padding:10px 14px; margin:12px 0; font-size:.87rem}
+.imp{background:#0e1c2b; border-right:4px solid var(--blue); border-radius:8px; padding:10px 14px; margin:12px 0; font-size:.87rem}
+.compare-grid{display:flex; flex-direction:column; gap:10px}
+.compare-item{background:#0f1420; border-radius:10px; padding:10px 14px; border:1px solid var(--border)}
+.compare-item .title{color:var(--amber); font-weight:700; margin-bottom:4px}
+.section-hero{text-align:center; padding:16px 14px; border-radius:14px; background:linear-gradient(135deg,#12213f,#0D1117); border:1px solid var(--blue); margin-bottom:18px}
+.section-hero h2.hero-title{color:var(--amber); margin:0 0 4px; font-size:1.13rem; border:none; padding:0}
+.section-hero p{color:var(--muted); margin:0; font-size:.82rem}
+.badge{display:inline-block; background:var(--blue); color:#fff; padding:3px 12px; border-radius:20px; font-size:.75rem; margin-top:8px}
+.badge.amber{background:var(--amber); color:#000}
+.formula-box{background:#0A0E14; border:1px solid var(--blue); border-radius:8px; padding:10px 12px; margin:8px 0; font-family:'JetBrains Mono',monospace; color:#93c5fd; direction:ltr; text-align:center; font-size:.92rem}
+.formula-label{color:var(--amber); font-family:'Tajawal'; direction:rtl; font-size:.8rem; margin-bottom:4px; display:block}
+.q-card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:12px}
+.q-num{color:var(--amber); font-weight:700; margin-left:4px}
+.options{list-style:none; padding:0; margin:8px 0 0}
+.options li{padding:7px 10px; margin-bottom:6px; border-radius:8px; background:#0f1420; border:1px solid var(--border); font-size:.9rem}
+details{margin-top:6px}
+summary{cursor:pointer; color:var(--blue); font-size:.85rem; font-weight:700; padding:4px 0}
+.answer-box{margin-top:6px; background:#0a1f14; border-right:3px solid var(--green); padding:8px 10px; border-radius:6px; font-size:.87rem}
+.correct{color:var(--green); font-weight:700}
+.open-q{font-size:.95rem; margin-bottom:4px}
+.exam-badge{display:inline-block; background:var(--amber); color:#000; font-size:.7rem; padding:2px 10px; border-radius:10px; font-weight:700; margin-bottom:8px}
+.section-title{background:var(--blue); color:#fff; padding:8px 14px; border-radius:10px; font-size:.98rem; margin-top:26px; margin-bottom:12px; text-align:center}
+.mini-toc{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 16px; margin-bottom:18px}
+.mini-toc a{color:var(--blue); display:block; padding:4px 0; text-decoration:none; font-size:.9rem}
+.progress{width:100%; background:var(--card); border-radius:20px; height:8px; margin-bottom:16px; overflow:hidden; border:1px solid var(--border)}
+.progress-fill{height:100%; background:var(--blue); width:0%; transition:width .3s}
+.counter{color:var(--muted); font-size:.85rem; margin-bottom:10px; text-align:center}
+.flashcard-wrap{width:100%; perspective:1200px; margin-bottom:16px}
+.flashcard{position:relative; width:100%; min-height:230px; transform-style:preserve-3d; transition:transform .5s; cursor:pointer}
+.flashcard.flipped{transform:rotateY(180deg)}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; padding:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:1px solid var(--border)}
+.front{background:linear-gradient(135deg,#161B22,#0D1117); border-color:var(--blue)}
+.back{background:linear-gradient(135deg,#1c1508,#161B22); border-color:var(--amber); transform:rotateY(180deg); font-size:.94rem; line-height:1.7}
+.q-label, .a-label{font-size:.7rem; color:var(--muted); text-transform:uppercase; margin-bottom:10px; letter-spacing:1px}
+.q-text{font-size:1rem; font-weight:700; color:var(--white)}
+.a-text{color:var(--white)}
+.tap-hint{position:absolute; bottom:10px; font-size:.7rem; color:var(--muted)}
+.fc-controls{display:flex; gap:10px; width:100%}
+.btn{flex:1; padding:12px; border-radius:10px; border:none; font-size:.95rem; font-family:'Tajawal'; font-weight:700; cursor:pointer}
+.btn-prev{background:var(--card); color:var(--white); border:1px solid var(--border)}
+.btn-next{background:var(--blue); color:#fff}
+.btn-shuffle{background:var(--amber); color:#000; flex:0 0 auto; padding:12px 16px}
+.footer{text-align:center; color:var(--muted); font-size:.8rem; margin-top:40px}
+</style>
+
+<style>
+/* ===== Floating Subject Navigator (injected) ===== */
+.lecnav-fab{
+  position:fixed; bottom:18px; left:18px; z-index:999;
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg,#2563EB,#1d4ed8);
+  color:#fff; border:none; box-shadow:0 4px 14px rgba(37,99,235,.5);
+  font-size:1.4rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform .2s;
+}
+.lecnav-fab:active{transform:scale(.92)}
+.lecnav-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:1000;
+  display:none; align-items:flex-end; justify-content:center;
+  backdrop-filter:blur(2px);
+}
+.lecnav-overlay.open{display:flex}
+.lecnav-sheet{
+  width:100%; max-width:600px; background:#161B22; border:1px solid #2D3440;
+  border-bottom:none; border-radius:20px 20px 0 0; padding:16px 14px 26px;
+  max-height:80vh; overflow-y:auto; animation:lecnavUp .25s ease;
+  font-family:'Tajawal','Segoe UI',sans-serif;
+}
+@keyframes lecnavUp{from{transform:translateY(30px); opacity:0} to{transform:translateY(0); opacity:1}}
+.lecnav-sheet h3{
+  color:#E8A000; margin:0 0 12px; font-size:1.05rem; text-align:center;
+  border:none; padding:0;
+}
+.lecnav-home{
+  display:block; text-align:center; color:#93c5fd; text-decoration:none;
+  font-size:.85rem; margin-bottom:14px; padding:8px; border:1px dashed #2D3440;
+  border-radius:10px;
+}
+.lecnav-list{display:flex; flex-direction:column; gap:8px}
+.lecnav-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  border-radius:12px; background:#0f1420; border:1px solid #2D3440;
+  color:#E2E8F0; text-decoration:none; font-size:.9rem; transition:.15s;
+}
+.lecnav-item:active{background:#1c2532}
+.lecnav-item.current{border-color:#2563EB; background:#0e1c2b}
+.lecnav-item .lecnav-num{
+  flex:0 0 auto; width:30px; height:30px; border-radius:50%;
+  background:#2563EB; color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.85rem; font-family:'JetBrains Mono',monospace;
+}
+.lecnav-item.current .lecnav-num{background:#E8A000; color:#000}
+.lecnav-item .lecnav-title{flex:1}
+.lecnav-close{
+  position:absolute; top:10px; left:14px; background:none; border:none;
+  color:#8B96A5; font-size:1.3rem; cursor:pointer; padding:4px 8px;
+}
+.lecnav-sheet{position:relative}
+</style>
+
+</head>
+<body>
+
+<!-- ===== Floating Subject Navigator (injected) ===== -->
+<button class="lecnav-fab" id="lecnavFab" onclick="document.getElementById('lecnavOverlay').classList.add('open')" aria-label="التنقل بين الفصول">☰</button>
+<div class="lecnav-overlay" id="lecnavOverlay" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="lecnav-sheet">
+    <button class="lecnav-close" onclick="document.getElementById('lecnavOverlay').classList.remove('open')">✕</button>
+    <h3>📚 التنقل بين الفصول</h3>
+    <a class="lecnav-home" href="index.html">⌂ العودة للفهرس الرئيسي</a>
+    <div class="lecnav-list">
+  <a class="lecnav-item current" href="numbering-system.html"><span class="lecnav-num">🔢</span><span class="lecnav-title">نظام العد</span></a>
+  <a class="lecnav-item" href="logic-gates.html"><span class="lecnav-num">🚪</span><span class="lecnav-title">البوابات المنطقية</span></a>
+  <a class="lecnav-item" href="boolean-algebra.html"><span class="lecnav-num">Σ</span><span class="lecnav-title">الجبر البولياني</span></a>
+    </div>
+  </div>
+</div>
+
+
+<div class="top-header">
+  <h1>🔢 نظام العد — Numbering System</h1>
+  <p>الدارات والنظم المنطقية | الفصل الثاني — سلسلة مراجعة موحدة</p>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="summary">📘 الملخص</button>
+    <button class="tab-btn" data-tab="cheat">🧾 ورقة غش</button>
+    <button class="tab-btn" data-tab="bank">❓ بنك أسئلة</button>
+    <button class="tab-btn" data-tab="flash">⚡ فلاش كاردز</button>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+<!-- ================= TAB 1: SUMMARY ================= -->
+<div class="tab-panel active" id="tab-summary">
+
+<div class="section-hero">
+  <h2 class="hero-title">📘 الملخص المكثف</h2>
+  <p>أنظمة العد، التحويلات، المتممات، والترميزات الرقمية</p>
+</div>
+
+<div class="mini-toc">
+  <a href="#s1">① مفهوم نظام العد</a>
+  <a href="#s2">② النظام العشري والإثناني</a>
+  <a href="#s3">③ التحويل إثناني↔عشري</a>
+  <a href="#s4">④ العمليات الحسابية الإثنانية</a>
+  <a href="#s5">⑤ المتممات (1's & 2's Complement)</a>
+  <a href="#s6">⑥ الأعداد المقيدة بإشارة</a>
+  <a href="#s7">⑦ النظام السداسي عشر</a>
+  <a href="#s8">⑧ الترميز BCD</a>
+  <a href="#s9">⑨ رماز غراي</a>
+</div>
+
+<h2 id="s1">① مفهوم نظام العد — Positional Number System</h2>
+<div class="card">
+  <ul>
+    <li>أي نظام عد يُبنى على 3 عناصر: <span class="key">الأساس (Base/Radix)</span>، <span class="key">الأرقام (Digits)</span>، و<span class="key">وزن الخانة (Positional Weight)</span>.</li>
+    <li>الأساس = عدد الرموز المستخدمة بالنظام. الأرقام تبدأ من 0 حتى (الأساس−1).</li>
+    <li>وزن كل خانة = الأساس مرفوعاً لأس دليل الخانة، ودليل الخانة يبدأ من 0 يسار الفاصلة ويزيد يساراً، وينقص (سالب) يمين الفاصلة.</li>
+  </ul>
+  <div class="note">📌 القاعدة العامة: قيمة أي رقم = مجموع (كل رقم × وزن خانته)</div>
+</div>
+
+<h2 id="s2">② النظام العشري والإثناني</h2>
+<div class="card">
+  <h3>النظام العشري Decimal</h3>
+  <ul><li>الأساس <span class="key">10</span> — الأرقام <span class="key">{0,1,...,9}</span> — أوزان الخانات: <span class="mono">...10³ 10² 10¹ 10⁰.10⁻¹ 10⁻²...</span></li></ul>
+  <div class="formula">7045.75 = 7×10³ + 0×10² + 4×10¹ + 5×10⁰ + 7×10⁻¹ + 5×10⁻²</div>
+
+  <h3>النظام الإثناني Binary</h3>
+  <ul><li>الأساس <span class="key">2</span> — الأرقام <span class="key">{0,1}</span> (تُسمى Bit) — أوزان الخانات: <span class="mono">...2³ 2² 2¹ 2⁰.2⁻¹ 2⁻²...</span></li></ul>
+  <div class="formula-box"><span class="formula-label">عدد القيم الممكنة لـ n بت</span>2ⁿ</div>
+  <div class="formula-box"><span class="formula-label">الرقم الأعظمي لـ n بت</span>2ⁿ − 1</div>
+  <div class="imp">📐 مثال: نظام 4 بت → 2⁴=16 قيمة ممكنة (0 إلى 15)، الرقم الأعظمي = 2⁴−1 = 15</div>
+  <table>
+    <tr><th>Dec</th><th>Bin</th><th>Dec</th><th>Bin</th></tr>
+    <tr><td>0</td><td class="mono">0000</td><td>8</td><td class="mono">1000</td></tr>
+    <tr><td>1</td><td class="mono">0001</td><td>9</td><td class="mono">1001</td></tr>
+    <tr><td>2</td><td class="mono">0010</td><td>10</td><td class="mono">1010</td></tr>
+    <tr><td>3</td><td class="mono">0011</td><td>11</td><td class="mono">1011</td></tr>
+    <tr><td>4</td><td class="mono">0100</td><td>12</td><td class="mono">1100</td></tr>
+    <tr><td>5</td><td class="mono">0101</td><td>13</td><td class="mono">1101</td></tr>
+    <tr><td>6</td><td class="mono">0110</td><td>14</td><td class="mono">1110</td></tr>
+    <tr><td>7</td><td class="mono">0111</td><td>15</td><td class="mono">1111</td></tr>
+  </table>
+</div>
+
+<h2 id="s3">③ التحويل بين الإثناني والعشري</h2>
+<div class="card">
+  <h3>إثناني ← عشري</h3>
+  <p>نضرب كل بت بوزن خانته ونجمع النتائج.</p>
+  <div class="imp">مثال: (1101.101)₂ = 1×2³+1×2²+0×2¹+1×2⁰+1×2⁻¹+0×2⁻²+1×2⁻³ = 8+4+0+1+0.5+0+0.125 = (13.625)₁₀</div>
+
+  <h3>عشري ← إثناني (الجزء الصحيح - القسمة المتكررة)</h3>
+  <p>نقسم على 2 بشكل متكرر ونسجل الباقي، ونقرأ البواقي من الأسفل للأعلى.</p>
+  <div class="imp">مثال (37)₁₀: 37÷2=18ب1 → 18÷2=9ب0 → 9÷2=4ب1 → 4÷2=2ب0 → 2÷2=1ب0 → 1÷2=0ب1<br>القراءة من الأسفل: (100101)₂</div>
+
+  <h3>عشري ← إثناني (الجزء الكسري - الضرب المتكرر)</h3>
+  <p>نضرب الجزء الكسري بـ2 بشكل متكرر ونأخذ الجزء الصحيح الناتج (Carry) كل مرة، القراءة من الأعلى للأسفل.</p>
+  <div class="imp">مثال (0.3125)₁₀: 0.3125×2=0.625→0 | 0.625×2=1.25→1 | 0.25×2=0.5→0 | 0.5×2=1.0→1<br>النتيجة: (0.0101)₂</div>
+</div>
+
+<h2 id="s4">④ العمليات الحسابية الإثنانية</h2>
+<div class="card">
+  <h3>الجمع</h3>
+  <table><tr><th>العملية</th><th>Sum</th><th>Carry</th></tr>
+  <tr><td class="mono">0+0</td><td>0</td><td>0</td></tr>
+  <tr><td class="mono">0+1</td><td>1</td><td>0</td></tr>
+  <tr><td class="mono">1+0</td><td>1</td><td>0</td></tr>
+  <tr><td class="mono">1+1</td><td>0</td><td>1</td></tr>
+  <tr><td class="mono">1+1+1</td><td>1</td><td>1</td></tr></table>
+
+  <h3>الطرح</h3>
+  <table><tr><th>العملية</th><th>النتيجة</th><th>Borrow</th></tr>
+  <tr><td class="mono">0−0</td><td>0</td><td>0</td></tr>
+  <tr><td class="mono">1−1</td><td>0</td><td>0</td></tr>
+  <tr><td class="mono">1−0</td><td>1</td><td>0</td></tr>
+  <tr><td class="mono">10−1</td><td>1</td><td>1</td></tr></table>
+
+  <h3>الضرب والقسمة</h3>
+  <p>الضرب: <span class="mono">0×0=0, 0×1=0, 1×0=0, 1×1=1</span> — نفس منطق الضرب العشري الطويل.<br>القسمة: نفس منطق القسمة الطويلة العشرية بأرقام 0 و1 فقط.</p>
+</div>
+
+<h2 id="s5">⑤ المتممات — Complements</h2>
+<div class="card">
+  <h3>المتمم إلى واحد (1's Complement)</h3>
+  <p>نعكس كل بت: كل 1 تصبح 0 وكل 0 تصبح 1 (في الدارات: يتحقق بالعواكس Inverters فقط).</p>
+  <div class="imp">مثال: 10001101 → 01110010</div>
+
+  <h3>المتمم إلى اثنين (2's Complement)</h3>
+  <div class="formula">المتمم إلى 2 = المتمم إلى 1 + 1</div>
+  <div class="imp">مثال: 11001010 → متمم1: 00110101 → +1 → متمم2: 00110110</div>
+  <p>في الدارات الرقمية: يتحقق بالعواكس + جامع (Adder).</p>
+</div>
+
+<h2 id="s6">⑥ الأعداد المقيدة بإشارة — Signed Numbers</h2>
+<div class="card">
+  <ul>
+    <li>نستخدم <span class="key">المتمم إلى اثنين</span> لتمثيل الأعداد الموجبة والسالبة معاً.</li>
+    <li>البت الأخير (MSB) = <span class="key">بت الإشارة</span>: 0=موجب، 1=سالب.</li>
+    <li>للتعبير عن عدد سالب: نأخذ الصيغة الحقيقية للعدد الموجب ونطبق عليها المتمم إلى اثنين.</li>
+  </ul>
+  <div class="formula-box"><span class="formula-label">مجال الأعداد المؤشرة لـ n بت</span>−2ⁿ⁻¹ إلى (2ⁿ⁻¹ − 1)</div>
+  <div class="imp">مثال: تمثيل (58) بـ8 بت<br>(+58)₁₀=00111010₂ | متمم1: 11000101 | +1 → متمم2: 11000110 = (−58)₁₀</div>
+  <div class="note">📌 لقراءة عدد مؤشر: إذا MSB=0 نقرأ عادي بأوزان موجبة. إذا MSB=1، بت الإشارة يُحسب بوزن سالب −2ⁿ⁻¹ والباقي أوزان موجبة، ثم نجمع الكل.</div>
+  <div class="imp">مثال: (10101010)₂ مقيد بإشارة → −128+32+8+2 = (−86)₁₀</div>
+</div>
+
+<h2 id="s7">⑦ النظام السداسي عشر — Hexadecimal</h2>
+<div class="card">
+  <p>الأساس <span class="key">16</span> — الأرقام <span class="key">{0-9,A,B,C,D,E,F}</span>. كل خانة = 4 بت بالضبط (Nibble).</p>
+  <table style="font-size:.78rem">
+    <tr><th>Hex</th><th>Dec</th><th>Bin</th><th>Hex</th><th>Dec</th><th>Bin</th></tr>
+    <tr><td>0</td><td>0</td><td class="mono">0000</td><td>8</td><td>8</td><td class="mono">1000</td></tr>
+    <tr><td>1</td><td>1</td><td class="mono">0001</td><td>9</td><td>9</td><td class="mono">1001</td></tr>
+    <tr><td>2</td><td>2</td><td class="mono">0010</td><td>A</td><td>10</td><td class="mono">1010</td></tr>
+    <tr><td>3</td><td>3</td><td class="mono">0011</td><td>B</td><td>11</td><td class="mono">1011</td></tr>
+    <tr><td>4</td><td>4</td><td class="mono">0100</td><td>C</td><td>12</td><td class="mono">1100</td></tr>
+    <tr><td>5</td><td>5</td><td class="mono">0101</td><td>D</td><td>13</td><td class="mono">1101</td></tr>
+    <tr><td>6</td><td>6</td><td class="mono">0110</td><td>E</td><td>14</td><td class="mono">1110</td></tr>
+    <tr><td>7</td><td>7</td><td class="mono">0111</td><td>F</td><td>15</td><td class="mono">1111</td></tr>
+  </table>
+  <div class="imp">سداسي عشر ← عشري: (3DA)₁₆ = 3×256+13×16+10 = (986)₁₀</div>
+  <div class="imp">عشري ← سداسي عشر (قسمة متكررة ÷16): (650)₁₀ → 650÷16=40ب10(A) → 40÷16=2ب8 → 2÷16=0ب2 → (28A)₁₆</div>
+  <div class="imp">إثناني↔سداسي عشر: نجمّع كل 4 بت (Nibble) ونستبدلها برمزها. مثال: 1100 0101 1010 0111 → (C5A7)₁₆</div>
+</div>
+
+<h2 id="s8">⑧ الترميز BCD — Binary Coded Decimal</h2>
+<div class="card">
+  <p>تمثيل كل خانة عشرية (0-9) بمكافئها الإثناني على 4 بتات، بشكل منفصل لكل خانة.</p>
+  <div class="note">⚠️ فقط 10 تشكيلات من أصل 16 ممكنة تُستخدم (0000 حتى 1001). الباقي (1010-1111) غير مستخدم.</div>
+  <table>
+    <tr><th>Digit</th><th>BCD</th><th>Digit</th><th>BCD</th></tr>
+    <tr><td>0</td><td class="mono">0000</td><td>5</td><td class="mono">0101</td></tr>
+    <tr><td>1</td><td class="mono">0001</td><td>6</td><td class="mono">0110</td></tr>
+    <tr><td>2</td><td class="mono">0010</td><td>7</td><td class="mono">0111</td></tr>
+    <tr><td>3</td><td class="mono">0011</td><td>8</td><td class="mono">1000</td></tr>
+    <tr><td>4</td><td class="mono">0100</td><td>9</td><td class="mono">1001</td></tr>
+  </table>
+  <div class="imp">عشري→BCD مثال (170): 1→0001, 7→0111, 0→0000 → 0001 0111 0000</div>
+  <p>الاستخدام العملي: لوحات المفاتيح (Keypad) والعرض الرقمي (Digital Display).</p>
+</div>
+
+<h2 id="s9">⑨ رماز غراي — Gray Code</h2>
+<div class="card">
+  <p>رماز <span class="key">غير موزون وغير حسابي</span> — خاصيته: عند الانتقال من رقم للذي يليه يتغير <span class="key">بت واحد فقط</span>.</p>
+  <h3>من إثناني إلى غراي</h3>
+  <ul>
+    <li>MSB في غراي = MSB في الإثناني (تُنسخ).</li>
+    <li>كل بت لاحق = XOR بين البت الحالي والسابق له بالإثناني.</li>
+  </ul>
+  <div class="imp">مثال: إثناني 10110 → MSB:1 → 1⊕0=1 → 0⊕1=1 → 1⊕1=0 → 1⊕0=1 → غراي: 11101</div>
+  <h3>من غراي إلى إثناني</h3>
+  <ul>
+    <li>MSB في الإثناني = MSB في غراي.</li>
+    <li>كل بت لاحق = XOR بين بت غراي الحالي والبت الإثناني الناتج سابقاً.</li>
+  </ul>
+  <div class="note">📌 يُستخدم في أجهزة الاستشعار الدورانية (IR) لتقليل احتمال الخطأ عند تغيّر أكثر من بت بنفس اللحظة.</div>
+</div>
+
+<div class="footer">سلسلة مراجعة موحدة — ملخص نظام العد</div>
+</div>
+
+<!-- ================= TAB 2: CHEAT SHEET ================= -->
+<div class="tab-panel" id="tab-cheat">
+<div class="section-hero"><h2 class="hero-title">🧾 ورقة الغش</h2><p>المعادلات والقواعد فقط — بدون شرح</p></div>
+
+<h3>الصيغ الأساسية</h3>
+<div class="formula-box"><span class="formula-label">عدد القيم لـ n بت</span>2ⁿ</div>
+<div class="formula-box"><span class="formula-label">الرقم الأعظمي لـ n بت</span>2ⁿ − 1</div>
+<div class="formula-box"><span class="formula-label">مجال الأعداد المؤشرة (n بت)</span>−2ⁿ⁻¹ → (2ⁿ⁻¹−1)</div>
+<div class="formula-box"><span class="formula-label">المتمم إلى 1</span>اعكس كل بت</div>
+<div class="formula-box"><span class="formula-label">المتمم إلى 2</span>(متمم 1) + 1</div>
+
+<h3>طرق التحويل</h3>
+<div class="formula-box"><span class="formula-label">عشري→إثناني (صحيح)</span>قسمة متكررة ÷2 — من الأسفل للأعلى</div>
+<div class="formula-box"><span class="formula-label">عشري→إثناني (كسري)</span>ضرب متكرر ×2 — من الأعلى للأسفل</div>
+<div class="formula-box"><span class="formula-label">عشري→سداسي عشر</span>قسمة متكررة ÷16 — من الأسفل للأعلى</div>
+<div class="formula-box"><span class="formula-label">إثناني↔سداسي عشر</span>كل 4 بت (Nibble) = رمز واحد</div>
+<div class="formula-box"><span class="formula-label">إثناني→غراي</span>MSB تُنسخ، الباقي XOR(حالي,سابق) بالإثناني</div>
+<div class="formula-box"><span class="formula-label">غراي→إثناني</span>MSB تُنسخ، الباقي XOR(غراي,ناتج سابق)</div>
+
+<h3>جدول الجمع الإثناني</h3>
+<table><tr><th class="mono">A+B</th><th>Sum</th><th>Carry</th></tr>
+<tr><td class="mono">0+0</td><td>0</td><td>0</td></tr>
+<tr><td class="mono">0+1</td><td>1</td><td>0</td></tr>
+<tr><td class="mono">1+0</td><td>1</td><td>0</td></tr>
+<tr><td class="mono">1+1</td><td>0</td><td>1</td></tr>
+<tr><td class="mono">1+1+1</td><td>1</td><td>1</td></tr></table>
+
+<h3>جدول الطرح الإثناني</h3>
+<table><tr><th class="mono">A−B</th><th>Result</th><th>Borrow</th></tr>
+<tr><td class="mono">0−0</td><td>0</td><td>0</td></tr>
+<tr><td class="mono">1−1</td><td>0</td><td>0</td></tr>
+<tr><td class="mono">1−0</td><td>1</td><td>0</td></tr>
+<tr><td class="mono">10−1</td><td>1</td><td>1</td></tr></table>
+
+<h3>جدول التحويل السريع (0-15)</h3>
+<table style="font-size:.78rem">
+<tr><th>Dec</th><th>Bin</th><th>Hex</th><th>Dec</th><th>Bin</th><th>Hex</th></tr>
+<tr><td>0</td><td class="mono">0000</td><td>0</td><td>8</td><td class="mono">1000</td><td>8</td></tr>
+<tr><td>1</td><td class="mono">0001</td><td>1</td><td>9</td><td class="mono">1001</td><td>9</td></tr>
+<tr><td>2</td><td class="mono">0010</td><td>2</td><td>10</td><td class="mono">1010</td><td>A</td></tr>
+<tr><td>3</td><td class="mono">0011</td><td>3</td><td>11</td><td class="mono">1011</td><td>B</td></tr>
+<tr><td>4</td><td class="mono">0100</td><td>4</td><td>12</td><td class="mono">1100</td><td>C</td></tr>
+<tr><td>5</td><td class="mono">0101</td><td>5</td><td>13</td><td class="mono">1101</td><td>D</td></tr>
+<tr><td>6</td><td class="mono">0110</td><td>6</td><td>14</td><td class="mono">1110</td><td>E</td></tr>
+<tr><td>7</td><td class="mono">0111</td><td>7</td><td>15</td><td class="mono">1111</td><td>F</td></tr>
+</table>
+
+<h3>جدول BCD (0-9 فقط)</h3>
+<table><tr><th>Digit</th><th>BCD</th><th>Digit</th><th>BCD</th></tr>
+<tr><td>0</td><td class="mono">0000</td><td>5</td><td class="mono">0101</td></tr>
+<tr><td>1</td><td class="mono">0001</td><td>6</td><td class="mono">0110</td></tr>
+<tr><td>2</td><td class="mono">0010</td><td>7</td><td class="mono">0111</td></tr>
+<tr><td>3</td><td class="mono">0011</td><td>8</td><td class="mono">1000</td></tr>
+<tr><td>4</td><td class="mono">0100</td><td>9</td><td class="mono">1001</td></tr>
+</table>
+<div class="note">⚠️ BCD يستخدم فقط 10 من 16 تشكيلة ممكنة (1010-1111 غير مستخدمة)</div>
+
+<div class="footer">سلسلة مراجعة موحدة — ورقة غش نظام العد</div>
+</div>
+
+<!-- ================= TAB 3: QUESTION BANK ================= -->
+<div class="tab-panel" id="tab-bank">
+<div class="section-hero"><h2 class="hero-title">❓ بنك الأسئلة</h2><p>اختيار من متعدد، أسئلة مفتوحة، ومحاكاة امتحان</p></div>
+
+<div class="section-title">① اختيار من متعدد</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">1.</span> كم عدد القيم الممكن تمثيلها بنظام رقمي مؤلف من 5 بت؟</p>
+  <ul class="options"><li>A) 16</li><li>B) 32</li><li>C) 31</li><li>D) 64</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) 32</span> — 2⁵=32 قيمة (من 0 إلى 31)</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">2.</span> ما ناتج تحويل (1101)₂ إلى العشري؟</p>
+  <ul class="options"><li>A) 11</li><li>B) 14</li><li>C) 13</li><li>D) 15</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: C) 13</span> — 1×8+1×4+0×2+1×1=13</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">3.</span> المتمم إلى واحد للعدد 10110 هو:</p>
+  <ul class="options"><li>A) 10110</li><li>B) 01001</li><li>C) 01010</li><li>D) 11001</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) 01001</span> — نعكس كل بت</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">4.</span> المتمم إلى اثنين يُحسب من خلال:</p>
+  <ul class="options"><li>A) عكس كل بت فقط</li><li>B) عكس كل بت ثم إضافة 1</li><li>C) إضافة 1 بدون عكس</li><li>D) طرح 1 من العدد الأصلي</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B</span> — متمم2 = متمم1 + 1</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">5.</span> في نظام مقيد بإشارة، إذا كان بت الإشارة (MSB) = 1 فإن العدد:</p>
+  <ul class="options"><li>A) موجب</li><li>B) سالب</li><li>C) صفر</li><li>D) غير معرّف</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) سالب</span></div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">6.</span> مجال الأعداد المؤشرة (Signed) لعدد من 8 بت هو:</p>
+  <ul class="options"><li>A) 0 إلى 255</li><li>B) −128 إلى 127</li><li>C) −127 إلى 127</li><li>D) −128 إلى 128</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) −128 إلى 127</span> — −2⁷ إلى (2⁷−1)</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">7.</span> كم بت يمثّل كل رمز في النظام السداسي عشر؟</p>
+  <ul class="options"><li>A) 2 بت</li><li>B) 3 بت</li><li>C) 4 بت</li><li>D) 8 بت</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: C) 4 بت</span> — Nibble واحد لكل رمز</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><span class="q-num">8.</span> كم تشكيلة تُستخدم فعلياً في ترميز BCD من أصل 16 ممكنة؟</p>
+  <ul class="options"><li>A) 16</li><li>B) 10</li><li>C) 8</li><li>D) 12</li></ul>
+  <details><summary>عرض الجواب</summary><div class="answer-box"><span class="correct">الجواب: B) 10</span> — من 0000 حتى 1001 فقط</div></details>
+</div>
+
+<div class="section-title">② أسئلة مفتوحة</div>
+
+<div class="q-card">
+  <p class="open-q"><b>1.</b> حوّل العدد (0.640625)₁₀ إلى النظام السداسي عشر موضحاً كل خطوة.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">0.640625×16=10.25 → الرقم 10=A، يتبقى 0.25. ثم 0.25×16=4.0 → الرقم 4، يتبقى 0. النتيجة: (0.A4)₁₆</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>2.</b> اجمع العددين الإثنانيين 00111 و10101 وتحقق من الناتج بالتحويل للعشري.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">00111(=7) + 10101(=21) = 11100(=28). بالجمع الإثناني: 00111+10101=11100 ✓ (7+21=28)</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>3.</b> اشرح لماذا يُعتبر النظام السداسي عشر مناسباً بشكل خاص لتمثيل الأعداد الرقمية مقارنة بالعشري.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">لأن كل خانة سداسي عشر تقابل بالضبط 4 بت إثناني (Nibble)، فالتحويل بين النظامين مباشر وسريع (استبدال مجموعات) بدون عمليات حسابية معقدة، بعكس التحويل من/إلى العشري الذي يتطلب قسمة أو ضرب متكرر.</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>4.</b> عبّر عن العدد العشري (−58) بصيغة المتمم إلى اثنين على 8 بت موضحاً الخطوات.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">(+58)₁₀=00111010₂. المتمم1: 11000101. +1 → المتمم2: 11000110. إذاً (−58)₁₀=11000110₂</div></details>
+</div>
+
+<div class="q-card">
+  <p class="open-q"><b>5.</b> أوجد رماز غراي المكافئ للعدد الإثناني 10110 موضحاً كل خطوة.</p>
+  <details><summary>عرض نموذج الجواب</summary><div class="answer-box">MSB تُنسخ: 1. ثم 1⊕0=1, 0⊕1=1, 1⊕1=0, 1⊕0=1. النتيجة: 11101</div></details>
+</div>
+
+<div class="section-title">③ محاكاة امتحان</div>
+<div class="q-card">
+  <span class="exam-badge">⏱ محاكاة — 15 دقيقة</span>
+  <p style="font-size:.9rem; color:var(--muted)">أجب بدون فتح الملخص. راجع الحل بالنهاية فقط.</p>
+
+  <p class="open-q"><b>س1 (10 علامات):</b> حوّل الأعداد التالية: أ) (43)₁₀ إلى إثناني بطريقة القسمة المتكررة. ب) (1011.011)₂ إلى عشري. ج) (2AF)₁₆ إلى عشري.</p>
+  <p class="open-q"><b>س2 (10 علامات):</b> بيّن كيف تحصل على المتمم إلى 2 للعدد 01011100، ثم بيّن قيمته العشرية إذا اعتُبر عدداً سالباً مقيداً بإشارة.</p>
+
+  <details><summary>📖 عرض نموذج الحل الكامل</summary>
+  <div class="answer-box">
+  <b>س1:</b><br>
+  أ) 43÷2=21ب1، 21÷2=10ب1، 10÷2=5ب0، 5÷2=2ب1، 2÷2=1ب0، 1÷2=0ب1 → من الأسفل: 101011<br>
+  ب) 1×8+0×4+1×2+1×1+0×0.5+1×0.25+1×0.125 = 11.375<br>
+  ج) 2×256+10×16+15×1 = 687<br><br>
+  <b>س2:</b> متمم1: 10100011، +1 → متمم2: 10100100. بما أن MSB=1 فهو سالب: −128+32+4 = −92
+  </div></details>
+</div>
+
+<div class="footer">سلسلة مراجعة موحدة — بنك أسئلة نظام العد</div>
+</div>
+
+<!-- ================= TAB 4: FLASHCARDS ================= -->
+<div class="tab-panel" id="tab-flash">
+<div class="section-hero"><h2 class="hero-title">⚡ بطاقات المراجعة</h2><p>اضغط البطاقة لقلبها وعرض الجواب</p></div>
+
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+<div class="counter" id="counter">1 / 14</div>
+
+<div class="flashcard-wrap">
+  <div class="flashcard" id="flashcard" onclick="flipCard()">
+    <div class="face front">
+      <div class="q-label">سؤال</div>
+      <div class="q-text" id="qText"></div>
+      <div class="tap-hint">👆 اضغط لعرض الجواب</div>
+    </div>
+    <div class="face back">
+      <div class="a-label">جواب</div>
+      <div class="a-text" id="aText"></div>
+    </div>
+  </div>
+</div>
+
+<div class="fc-controls">
+  <button class="btn btn-prev" onclick="prevCard()">◀ السابق</button>
+  <button class="btn btn-shuffle" onclick="shuffleCards()">🔀</button>
+  <button class="btn btn-next" onclick="nextCard()">التالي ▶</button>
+</div>
+</div>
+
+<div class="footer">سلسلة مراجعة موحدة — فلاش كاردز نظام العد</div>
+
+</div>
+
+<script>
+const cards = [
+  {q:"ما هو أساس النظام الإثناني؟", a:"2 — الأرقام المستخدمة: 0 و1 فقط"},
+  {q:"صيغة عدد القيم الممكنة لـ n بت؟", a:"2ⁿ"},
+  {q:"صيغة الرقم الأعظمي لـ n بت؟", a:"2ⁿ − 1"},
+  {q:"كيف نحصل على المتمم إلى واحد؟", a:"نعكس كل بت: كل 1 تصبح 0 وكل 0 تصبح 1"},
+  {q:"كيف نحصل على المتمم إلى اثنين؟", a:"المتمم إلى 1 ثم نضيف 1"},
+  {q:"في نظام مقيد بإشارة، ماذا يعني بت الإشارة=1؟", a:"العدد سالب"},
+  {q:"مجال الأعداد المؤشرة لـ n بت؟", a:"من −2ⁿ⁻¹ إلى (2ⁿ⁻¹ − 1)"},
+  {q:"كم بت يمثله كل رمز سداسي عشر؟", a:"4 بت (Nibble)"},
+  {q:"طريقة تحويل عشري→إثناني (جزء صحيح)؟", a:"قسمة متكررة على 2، القراءة من الأسفل للأعلى"},
+  {q:"طريقة تحويل عشري→إثناني (جزء كسري)؟", a:"ضرب متكرر بـ2، القراءة من الأعلى للأسفل"},
+  {q:"كم تشكيلة تُستخدم في BCD من أصل 16؟", a:"10 فقط (0000 إلى 1001)"},
+  {q:"ما الخاصية المميزة لرماز غراي؟", a:"يتغير بت واحد فقط عند الانتقال لرقم تالٍ"},
+  {q:"كيف نحول من إثناني إلى غراي؟", a:"MSB تُنسخ، وكل بت لاحق = XOR بين الحالي والسابق بالإثناني"},
+  {q:"أين تُستخدم BCD عملياً؟", a:"لوحات المفاتيح (Keypad) والعرض الرقمي (Digital Display)"}
+];
+
+let currentIndex = 0;
+let isFlipped = false;
+
+function renderCard(){
+  document.getElementById('qText').textContent = cards[currentIndex].q;
+  document.getElementById('aText').textContent = cards[currentIndex].a;
+  document.getElementById('counter').textContent = (currentIndex+1) + ' / ' + cards.length;
+  document.getElementById('progressFill').style.width = ((currentIndex+1)/cards.length*100) + '%';
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+  isFlipped = false;
+}
+function flipCard(){
+  isFlipped = !isFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+}
+function nextCard(){ currentIndex = (currentIndex + 1) % cards.length; renderCard(); }
+function prevCard(){ currentIndex = (currentIndex - 1 + cards.length) % cards.length; renderCard(); }
+function shuffleCards(){
+  for(let i = cards.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  currentIndex = 0;
+  renderCard();
+}
+renderCard();
+</script>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+</script>
+
+</body>
+</html>
